@@ -53,11 +53,6 @@ deploy-core: az-login  ## Deploy core infrastructure
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& terragrunt apply --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure/core
 
-destroy-core: az-login  ## Destroy core infrastructure
-	$(call target_title, "Destroy Core") \
-	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
-	&& terragrunt destroy --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure/core
-
 deploy-transform: az-login  ## Deploy transform infrastructure
 	$(call target_title, "Deploy Transform") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
@@ -67,3 +62,10 @@ destroy-all: az-login  ## Destroy all infrastructure
 	$(call target_title, "Destroy All") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& terragrunt run-all destroy --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure --terragrunt-non-interactive
+
+test: bootstrap deploy-all destroy-all bootstrap-destroy  ## Test by deploy->destroy
+
+destroy-no-terraform:
+	$(call target_title, "Destroy no terraform") \
+	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
+	&& . ${MAKEFILE_DIR}/scripts/destroy_no_terraform.sh

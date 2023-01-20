@@ -85,8 +85,8 @@ async function getCommandFromComment({ core, context, github }) {
           break;
         }
 
-      case "/test-destroy-env":
-        command = "test-destroy-env";
+      case "/destroy-env":
+        command = "destroy-env";
         break;
 
       case "/help":
@@ -211,7 +211,7 @@ async function showHelp({ github }, repoOwner, repoName, prNumber, commentUser, 
 You can use the following commands:
 &nbsp;&nbsp;&nbsp;&nbsp;/test - build, deploy
 bsp;&nbsp;&nbsp;&nbsp;/test-force-approve - force approval of the PR tests (i.e. skip the deployment checks)
-&nbsp;&nbsp;&nbsp;&nbsp;/test-destroy-env - delete the validation environment for a PR (e.g. to enable testing a deployment from a clean start after previous tests)
+&nbsp;&nbsp;&nbsp;&nbsp;/destroy-env - delete the validation environment for a PR (e.g. to enable testing a deployment from a clean start after previous tests)
 &nbsp;&nbsp;&nbsp;&nbsp;/help - show this help`;
 
   await addActionComment({ github }, repoOwner, repoName, prNumber, commentUser, commentLink, body);

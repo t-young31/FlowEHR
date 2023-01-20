@@ -23,6 +23,9 @@ on:
       environment:
         type: string
         required: true
+      prefix_override:
+        type: string
+        required: false
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -67,7 +70,7 @@ jobs:
             -e ARM_CLIENT_SECRET="${{ fromJSON(secrets.AZURE_CREDENTIALS).clientSecret }}" \
             -e ARM_TENANT_ID="${{ fromJSON(secrets.AZURE_CREDENTIALS).tenantId }}" \
             -e ARM_SUBSCRIPTION_ID="${{ fromJSON(secrets.AZURE_CREDENTIALS).subscriptionId }}" \
-            -e PREFIX="${{ secrets.PREFIX }}" \
+            -e PREFIX="${{ (inputs.prefix_override != '' && inputs.prefix_override) || secrets.PREFIX }}" \
             -e LOCATION="${{ secrets.LOCATION }}" \
             -e ENVIRONMENT=${{ inputs.environment }} \
             "$DEVCONTAINER_FULL_TAG" \

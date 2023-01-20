@@ -62,6 +62,9 @@ EOF
 
 # Here we can define additional variables to be inhereted by each module
 inputs = {
+
+  core_rg_name = get_env("CORE_RG")
+
   tags = {
     environment = get_env("ENVIRONMENT")
   }

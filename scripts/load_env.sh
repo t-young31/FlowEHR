@@ -58,5 +58,6 @@ fi
 
 MGMT_RG=$("${script_dir}/name.sh" management rg)
 MGMT_STORAGE=$("${script_dir}/name.sh" management str)
+CORE_RG=$("${script_dir}/name.sh" core rg)
 
-export MGMT_RG MGMT_STORAGE STATE_CONTAINER="tfstate"
+export MGMT_RG MGMT_STORAGE CORE_RG STATE_CONTAINER="tfstate"

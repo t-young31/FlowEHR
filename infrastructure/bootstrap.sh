@@ -17,8 +17,6 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-state_container="tfstate"
-
 while getopts ":d" option; do
    case $option in
       d) # destroy bootstrap rg
@@ -39,7 +37,7 @@ echo "Creating management storage account..."
 az storage account create --resource-group "$MGMT_RG" --name "$MGMT_STORAGE" --sku Standard_LRS --encryption-services blob
 
 echo "Creating blob container for TF state..."
-az storage container create --name "$state_container" --account-name "$MGMT_STORAGE" --auth-mode login -o table
+az storage container create --name "$STATE_CONTAINER" --account-name "$MGMT_STORAGE" --auth-mode login -o table
 
 echo "Creating container registry for devcontainer..."
 if az acr list | grep -q "$DEVCONTAINER_ACR_NAME"; then

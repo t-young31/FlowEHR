@@ -31,8 +31,10 @@ remote_state {
     container_name       = get_env("STATE_CONTAINER")
     key                  = "${path_relative_to_include()}/terraform.tfstate"
   }
-}
-EOF
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
 }
 
 generate "provider" {

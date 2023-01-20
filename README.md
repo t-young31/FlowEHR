@@ -100,7 +100,7 @@ be created in a private repository created from this template repository.
     "resourceManagerEndpointUrl": "management.azure.com"
     }
     ```
-    
+
     - `PREFIX`: Prefix used for naming resources. Must be unique to this repository e.g. `abcd`
     - `LOCATION`: Name of an Azure location e.g. `uksouth`. These can be listed with `az account list-locations -o table`
     - `ENVIRONMENT`: Name of the envrionment e.g. `dev`, also used to name resources

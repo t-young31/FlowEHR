@@ -20,7 +20,6 @@ on:
 jobs:
   destroy:
     uses: ./.github/workflows/devcontainer_make_command.yml
-    needs: devcontainer
     with:
       command: destroy-all
       environment: Infra-Test

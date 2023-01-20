@@ -82,7 +82,7 @@ jobs:
       environment: Infra-Test
     secrets: inherit
 
-  destroy_pr_env:  # Remove the resource group 
+  destroy_pr_env:  # Remove the resource group
     needs: [pr_comment]
     if: |
       needs.pr_comment.outputs.command == 'destroy-env'

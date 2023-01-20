@@ -79,7 +79,9 @@ jobs:
         run: |
           set -e
 
-          DEVCONTAINER_FULL_TAG="${{ secrets.DEVCONTAINER_ACR_NAME }}.azurecr.io/flowehr/devcontainer:${{ inputs.environment }}"
+          ACR_URI="${{ secrets.DEVCONTAINER_ACR_NAME }}.azurecr.io"
+          DEVCONTAINER_TAG=${{ inputs.environment }}
+          DEVCONTAINER_FULL_TAG="${ACR_URI}/flowehr/devcontainer:${DEVCONTAINER_TAG}"
           USER_UID=$(id -u)
           USER_GID=$(id -g)
 

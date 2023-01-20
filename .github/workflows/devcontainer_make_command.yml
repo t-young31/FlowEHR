@@ -56,7 +56,7 @@ jobs:
 
       - name: Run command in DevContainer
         env:
-          DEVCONTAINER_FULL_TAG: "${{ secrets.DEVCONTAINER_ACR_NAME }}.azurecr.io/flowehr/devcontainer:${{ inputs.environment }}"
+          DC_FULLTAG: "${{ secrets.DEVCONTAINER_ACR_NAME }}.azurecr.io/flowehr/devcontainer:${{ inputs.environment }}"
         run: |
           docker run --rm --mount \
             "type=bind,src=${{ github.workspace }},dst=/workspaces/devcontainer" \
@@ -73,5 +73,5 @@ jobs:
             -e PREFIX="${{ (inputs.prefix_override != '' && inputs.prefix_override) || secrets.PREFIX }}" \
             -e LOCATION="${{ secrets.LOCATION }}" \
             -e ENVIRONMENT=${{ inputs.environment }} \
-            "$DEVCONTAINER_FULL_TAG" \
+            "$DC_FULLTAG" \
           bash -c 'sudo chown -R vscode . && make ${{ inputs.command }}'

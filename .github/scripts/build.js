@@ -209,8 +209,8 @@ async function showHelp({ github }, repoOwner, repoName, prNumber, commentUser, 
   const body = `${leadingContent}
 
 You can use the following commands:
-&nbsp;&nbsp;&nbsp;&nbsp;/test - build, deploy
-bsp;&nbsp;&nbsp;&nbsp;/test-force-approve - force approval of the PR tests (i.e. skip the deployment checks)
+&nbsp;&nbsp;&nbsp;&nbsp;/test - deply and destroy
+&nbsp;&nbsp;&nbsp;&nbsp;/test-force-approve - force approval of the PR tests (i.e. skip the deployment checks)
 &nbsp;&nbsp;&nbsp;&nbsp;/destroy-env - delete the validation environment for a PR (e.g. to enable testing a deployment from a clean start after previous tests)
 &nbsp;&nbsp;&nbsp;&nbsp;/help - show this help`;
 

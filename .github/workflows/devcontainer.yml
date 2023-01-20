@@ -43,7 +43,8 @@ jobs:
   paths_filter:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-
+    permissions:
+      pull-requests: read
     outputs:
       needsbuild: ${{ steps.filter.outputs.devcontainer }}
 

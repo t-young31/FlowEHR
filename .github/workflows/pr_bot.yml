@@ -20,6 +20,9 @@ on:
     # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#issue_comment
     # https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue_comment
 
+permissions:
+  pull-requests: write
+
 jobs:
   pr_comment:
     name: PR comment
@@ -77,6 +80,7 @@ jobs:
           conclusion: "success"
 
   devcontainer:
+    needs: [pr_comment]
     uses: ./.github/workflows/devcontainer.yml
     with:
       environment: Infra-Test

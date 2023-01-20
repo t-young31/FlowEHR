@@ -96,7 +96,7 @@ jobs:
           ACR_URI="${{ secrets.DEVCONTAINER_ACR_NAME }}.azurecr.io"
           DEVCONTAINER_TAG=${{ inputs.environment }}
           DEVCONTAINER_FULL_TAG="${ACR_URI}/flowehr/devcontainer:${DEVCONTAINER_TAG}"
-          USER_UID=$(id -u)
-          USER_GID=$(id -g)
+          export USER_UID=$(id -u)
+          export USER_GID=$(id -g)
 
           devcontainer build --image-name $DEVCONTAINER_FULL_TAG --workspace-folder . --push

@@ -1,11 +1,7 @@
 {
 	"name": "FlowEHR",
 	"build": {
-		"dockerfile": "Dockerfile",
-		"args": {
-			"USER_UID": "${localEnv:USER_UID}",
-			"USER_GID": "${localEnv:USER_GID}"
-		}
+		"dockerfile": "Dockerfile"
 	},
 	"mounts": [ "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind" ],
 	"overrideCommand": false,

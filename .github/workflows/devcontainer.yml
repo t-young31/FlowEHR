@@ -51,11 +51,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - run: |
-        echo "base ref: ${{ github.base_ref }}"
-        echo "head ref: ${{ github.head_ref }}"
-        echo "ref: ${{ github.ref }}"
-        echo "sha: ${{ github.sha }}"
+      - run: echo "${{ github.head_ref }} ${{ github.ref }} ${{ github.sha }}"
 
       - uses: dorny/paths-filter@v2
         id: filter

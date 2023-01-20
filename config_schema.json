@@ -13,14 +13,12 @@
         "prefix": {
             "description": "Unique identifier (i.e. for differentiating organisations/projects)",
             "type": "string",
-            "pattern": "^[a-zA-Z 0-9\\_]*$",
-            "maxLength": 4
+            "pattern": "^[a-zA-Z 0-9\\_-]*$"
         },
         "environment": {
             "description": "Unique environment name for differentiating deployment environments",
             "type": "string",
-            "pattern": "^[a-zA-Z 0-9\\_]*$",
-            "maxLength": 5
+            "pattern": "^[a-zA-Z 0-9\\_-]*$"
         },
         "arm_subscription_id": {
             "description": "Subscription Id for the Azure subscription to deploy to",

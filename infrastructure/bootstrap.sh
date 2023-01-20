@@ -17,8 +17,10 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-mgmt_rg="${PREFIX}-${ENVIRONMENT}-rg-mgmt"
-mgmt_storage="${PREFIX}${ENVIRONMENT}strmgmt"
+script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+mgmt_rg=$("${script_dir}/../scripts/name.sh" management rg)
+mgmt_storage=$("${script_dir}/../scripts/name.sh" management str)
 state_container="tfstate"
 
 while getopts ":d" option; do

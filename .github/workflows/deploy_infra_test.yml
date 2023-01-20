@@ -19,6 +19,9 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  pull-requests: read
+
 jobs:
   devcontainer:
     uses: ./.github/workflows/devcontainer.yml

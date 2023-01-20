@@ -63,12 +63,7 @@ deploy-transform: az-login  ## Deploy transform infrastructure
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& terragrunt apply --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure/transform
 
-destroy-transform: az-login  ## Destroying transform infrastructure
-	$(call target_title, "Destroying Transform") \
+destroy-all: az-login  ## Destroy all infrastructure
+	$(call target_title, "Destroy All") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
-	&& terragrunt destroy --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure
-
-auth: az-login
-	$(call target_title, "Create auth") \
-	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
-	&& . ${MAKEFILE_DIR}/scripts/create_sp.sh
+	&& terragrunt run-all destroy --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure --terragrunt-non-interactive

@@ -25,9 +25,12 @@ while getopts ":d" option; do
    case $option in
       d) # destroy bootstrap rg
         echo "Destroying management resource group..."
-        az group delete --resource-group $mgmt_rg --yes
+        az group delete --resource-group "$mgmt_rg" --yes
         echo "Management rg destroyed."
         exit;;
+      *) # unknown
+         echo "Unknown flag $option"
+         exit 1
    esac
 done
 
@@ -39,5 +42,12 @@ az storage account create --resource-group "$mgmt_rg" --name "$mgmt_storage" --s
 
 echo "Creating blob container for TF state..."
 az storage container create --name "$state_container" --account-name "$mgmt_storage" --auth-mode login -o table
+
+echo "Creating container registry for devcontainer..."
+if az acr list | grep -q "$DEVCONTAINER_ACR_NAME"; then
+   echo "ACR already exists. Not attempting to create it"
+else
+   az acr create --resource-group "$mgmt_rg" --name "$DEVCONTAINER_ACR_NAME" --sku Basic -o table
+fi
 
 echo "Bootstrapping complete."

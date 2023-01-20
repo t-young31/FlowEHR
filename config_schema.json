@@ -26,6 +26,11 @@
             "description": "Subscription Id for the Azure subscription to deploy to",
             "type": "string",
             "pattern": "^[{]?[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]?$"
+        },
+        "devcontainer_acr_name": {
+            "description": "Azure container registry name",
+            "type": "string",
+            "pattern": "[0-9a-z]{5,50}"
         }
     }
 }

@@ -105,6 +105,8 @@ be created in a private repository created from this template repository.
     this repository e.g. `abcd`
     - `LOCATION`: Name of an Azure location e.g. `uksouth`. These can be listed with `az account list-locations -o table`
     - `ENVIRONMENT`: Name of the envrionment e.g. `dev`, also used to name resources
+    - `DEVCONTAINER_ACR_NAME`: Name of the azure container registry to use for the devcontainer build.
+    This may or may not exist. e.g. `flowehrmgmtacr`
 
 </details>
 

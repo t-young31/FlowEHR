@@ -48,3 +48,8 @@ core: az-login  ## Deploy core infrastructure
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& cd ${MAKEFILE_DIR}/infrastructure/core \
 	&& terragrunt apply
+
+auth: az-login
+	$(call target_title, "Create auth") \
+	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
+	&& . ${MAKEFILE_DIR}/scripts/create_sp.sh

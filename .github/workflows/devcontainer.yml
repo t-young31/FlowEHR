@@ -51,6 +51,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - run: |
+        echo "base ref: ${{ github.base_ref }}"
+        echo "head ref: ${{ github.head_ref }}"
+        echo "ref: ${{ github.ref }}"
+        echo "sha: ${{ github.sha }}"
+
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -63,7 +69,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: paths_filter
     environment: ${{ inputs.environment }}
-    if: needs.paths_filter.outputs.needsbuild == 'true'
+    # if: needs.paths_filter.outputs.needsbuild == 'true'
+    if: false   # TODO: revert
     steps:
 
       - name: Checkout

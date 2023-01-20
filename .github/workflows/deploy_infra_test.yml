@@ -30,6 +30,6 @@ jobs:
     uses: ./.github/workflows/devcontainer_make_command.yml
     needs: devcontainer
     with:
-      command: deploy
+      command: all
       environment: Infra-Test
     secrets: inherit

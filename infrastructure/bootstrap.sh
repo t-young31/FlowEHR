@@ -17,17 +17,13 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-script_dir=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-
-mgmt_rg=$("${script_dir}/../scripts/name.sh" management rg)
-mgmt_storage=$("${script_dir}/../scripts/name.sh" management str)
 state_container="tfstate"
 
 while getopts ":d" option; do
    case $option in
       d) # destroy bootstrap rg
         echo "Destroying management resource group..."
-        az group delete --resource-group "$mgmt_rg" --yes
+        az group delete --resource-group "$MGMT_RG" --yes
         echo "Management rg destroyed."
         exit;;
       *) # unknown
@@ -37,19 +33,19 @@ while getopts ":d" option; do
 done
 
 echo "Creating management resource group..."
-az group create --resource-group "$mgmt_rg" --location "$LOCATION"
+az group create --resource-group "$MGMT_RG" --location "$LOCATION"
 
 echo "Creating management storage account..."
-az storage account create --resource-group "$mgmt_rg" --name "$mgmt_storage" --sku Standard_LRS --encryption-services blob
+az storage account create --resource-group "$MGMT_RG" --name "$MGMT_STORAGE" --sku Standard_LRS --encryption-services blob
 
 echo "Creating blob container for TF state..."
-az storage container create --name "$state_container" --account-name "$mgmt_storage" --auth-mode login -o table
+az storage container create --name "$state_container" --account-name "$MGMT_STORAGE" --auth-mode login -o table
 
 echo "Creating container registry for devcontainer..."
 if az acr list | grep -q "$DEVCONTAINER_ACR_NAME"; then
    echo "ACR already exists. Not attempting to create it"
 else
-   az acr create --resource-group "$mgmt_rg" --name "$DEVCONTAINER_ACR_NAME" --sku Basic -o table
+   az acr create --resource-group "$MGMT_RG" --name "$DEVCONTAINER_ACR_NAME" --sku Basic -o table
 fi
 
 echo "Bootstrapping complete."

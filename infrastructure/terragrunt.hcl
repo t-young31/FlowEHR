@@ -29,8 +29,8 @@ generate "backend" {
   contents  = <<EOF
 terraform {
   backend "azurerm" {
-    resource_group_name  = "${get_env("PREFIX")}-${get_env("ENVIRONMENT")}-rg-mgmt"
-    storage_account_name = "${get_env("PREFIX")}${get_env("ENVIRONMENT")}strmgmt"
+    resource_group_name  = "${get_env("MGMT_RG")}"
+    storage_account_name = "${get_env("MGMT_STORAGE")}"
     container_name       = "tfstate"
     key                  = "bootstrap.tfstate"
   }

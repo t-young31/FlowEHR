@@ -64,6 +64,7 @@ EOF
 inputs = {
 
   core_rg_name = get_env("CORE_RG")
+  core_storage_name = get_env("CORE_STORAGE")
   location = get_env("LOCATION")
   prefix = get_env("PREFIX")
   environment = get_env("ENVIRONMENT")

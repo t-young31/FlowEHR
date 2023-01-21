@@ -21,7 +21,7 @@ resource "azurerm_subnet" "core" {
 }
 
 resource "azurerm_storage_account" "core" {
-  name                     = "${var.prefix}${var.environment}strg"
+  name                     = var.core_storage_name
   resource_group_name      = azurerm_resource_group.core.name
   location                 = azurerm_resource_group.core.location
   account_tier             = "Standard"

@@ -57,7 +57,8 @@ jobs:
       - name: Build and run dev container task
         uses: devcontainers/ci@v0.2
         with:
-          imageName: "${{ secrets.DEVCONTAINER_ACR_NAME }}.azurecr.io/flowehr/devcontainer:${{ inputs.environment }}"
+          imageName: "${{ secrets.DEVCONTAINER_ACR_NAME }}.azurecr.io/flowehr/devcontainer"
+          imageTag: ${{ inputs.environment }}
           runCmd: make ${{ inputs.command }}
           env: |
             DOCKER_BUILDKIT=1

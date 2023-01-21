@@ -25,7 +25,6 @@ permissions:
 jobs:
   bootstrap:
     uses: ./.github/workflows/devcontainer_make_command.yml
-    needs: devcontainer
     with:
       command: bootstrap
       environment: Infra-Test
@@ -33,7 +32,7 @@ jobs:
 
   deploy:
     uses: ./.github/workflows/devcontainer_make_command.yml
-    needs: devcontainer
+    needs: bootstrap
     with:
       command: deploy-all
       environment: Infra-Test

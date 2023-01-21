@@ -64,6 +64,9 @@ EOF
 inputs = {
 
   core_rg_name = get_env("CORE_RG")
+  location = get_env("LOCATION")
+  prefix = get_env("PREFXIX")
+  environment = get_env("ENVIRONMENT")
 
   tags = {
     environment = get_env("ENVIRONMENT")

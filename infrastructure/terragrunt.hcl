@@ -65,7 +65,7 @@ inputs = {
 
   core_rg_name = get_env("CORE_RG")
   location = get_env("LOCATION")
-  prefix = get_env("PREFXIX")
+  prefix = get_env("PREFIX")
   environment = get_env("ENVIRONMENT")
 
   tags = {

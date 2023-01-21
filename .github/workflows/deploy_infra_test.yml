@@ -25,7 +25,6 @@ permissions:
 jobs:
   deploy:
     uses: ./.github/workflows/devcontainer_make_command.yml
-    needs: bootstrap
     with:
       command: deploy-all
       environment: Infra-Test

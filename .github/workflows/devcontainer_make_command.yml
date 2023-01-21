@@ -51,12 +51,11 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: ACR Login
-        # Only login to the container registry if we're not bootstrapping as the ACR may not exist
-        if: contains(inputs.command, 'bootstrap') != true
         run: |
           az acr login --name "${{ secrets.DEVCONTAINER_ACR_NAME }}"
 
       - name: Build and run dev container task
+        if: success() || failure()  # ACR may not exist with the make command creating it
         uses: devcontainers/ci@v0.2
         with:
           imageName: "${{ secrets.DEVCONTAINER_ACR_NAME }}.azurecr.io/flowehr/devcontainer"
@@ -67,7 +66,7 @@ jobs:
             DOCKER_BUILDKIT=1
             TF_INPUT=0
             TF_IN_AUTOMATION=1
-            ARM_CLIENT_ID=${{ env.ARM_CLIENT_ID }}
+            ARM_CLIENT_ID=${{ romJSON(secrets.AZURE_CREDENTIALS).clientId }}
             ARM_CLIENT_SECRET=${{ fromJSON(secrets.AZURE_CREDENTIALS).clientSecret }}
             ARM_TENANT_ID=${{ fromJSON(secrets.AZURE_CREDENTIALS).tenantId }}
             ARM_SUBSCRIPTION_ID=${{ fromJSON(secrets.AZURE_CREDENTIALS).subscriptionId }}

@@ -79,13 +79,6 @@ jobs:
           status: "completed"
           conclusion: "success"
 
-  devcontainer:
-    needs: [pr_comment]
-    uses: ./.github/workflows/devcontainer.yml
-    with:
-      environment: Infra-Test
-    secrets: inherit
-
   destroy_pr_env:  # Remove the resource group
     needs: [pr_comment]
     if: |
@@ -99,7 +92,7 @@ jobs:
     secrets: inherit
 
   run_test:
-    needs: [pr_comment, devcontainer]
+    needs: [pr_comment]
     if: |
       needs.pr_comment.outputs.command == 'run-tests'
     name: Deploy PR env
@@ -109,3 +102,5 @@ jobs:
       environment: Infra-Test
       command: test
     secrets: inherit
+
+# TODO: think about whether we need a test for the devcontainer build

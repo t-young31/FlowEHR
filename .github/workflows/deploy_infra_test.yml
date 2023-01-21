@@ -23,9 +23,11 @@ permissions:
   pull-requests: read
 
 jobs:
-  devcontainer:
-    uses: ./.github/workflows/devcontainer.yml
+  bootstrap:
+    uses: ./.github/workflows/devcontainer_make_command.yml
+    needs: devcontainer
     with:
+      command: bootstrap
       environment: Infra-Test
     secrets: inherit
 
@@ -33,6 +35,6 @@ jobs:
     uses: ./.github/workflows/devcontainer_make_command.yml
     needs: devcontainer
     with:
-      command: all
+      command: deploy-all
       environment: Infra-Test
     secrets: inherit

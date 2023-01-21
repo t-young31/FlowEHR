@@ -33,7 +33,6 @@ on:
       DEVCONTAINER_ACR_NAME:
         required: true
 
-
 # for each ref run just the most recent and cancel any pending/running ones
 concurrency:
   group: "${{ github.workflow }}-${{ github.head_ref }}"
@@ -51,8 +50,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - run: echo "${{ github.head_ref }} ${{ github.ref }} ${{ github.sha }}"
-
       - uses: dorny/paths-filter@v2
         id: filter
         with:
@@ -65,8 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: paths_filter
     environment: ${{ inputs.environment }}
-    # if: needs.paths_filter.outputs.needsbuild == 'true'
-    if: false   # TODO: revert
+    if: needs.paths_filter.outputs.needsbuild == 'true'
     steps:
 
       - name: Checkout

@@ -22,6 +22,7 @@ on:
 
 permissions:
   pull-requests: write
+  checks: write
 
 jobs:
   pr_comment:
@@ -121,9 +122,6 @@ jobs:
     needs: [pr_comment, run_test]
     runs-on: ubuntu-latest
     environment: Infra-Test
-    permissions:
-      checks: write
-      pull-requests: write
     steps:
       # For PR builds triggered from comment builds, the GITHUB_REF is set to main
       # so the checks aren't automatically associated with the PR

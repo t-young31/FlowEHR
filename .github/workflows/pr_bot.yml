@@ -61,10 +61,10 @@ jobs:
         run: |
           echo "PR Details"
           echo "=========="
-          echo "prRef       : ${{ steps.check_command.outputs.prRef }}"
-          echo "prHeadSha   : ${{ steps.check_command.outputs.prHeadSha }}"
-          echo "prRefId     : ${{ steps.check_command.outputs.prRefId }}"
-          echo "ciGitRef    : ${{ steps.check_command.outputs.ciGitRef }}"
+          echo "prRef      : ${{ steps.check_command.outputs.prRef }}"
+          echo "prHeadSha  : ${{ steps.check_command.outputs.prHeadSha }}"
+          echo "prRefId    : ${{ steps.check_command.outputs.prRefId }}"
+          echo "ciGitRef   : ${{ steps.check_command.outputs.ciGitRef }}"
 
       # If we don't run the actual deploy (see the run_test job below) we won't receive a check-run status,
       # and will have to send it "manually"
@@ -89,7 +89,7 @@ jobs:
       prefix_override: ${{ needs.pr_comment.outputs.prRefId }}
       environment: Infra-Test
       command: destroy-no-terraform
-      prRef: ${{ needs.pr_comment.outputs.prRef }}
+      prRef: ${{ steps.check_command.outputs.prRef }}
     secrets: inherit
 
   run_test:
@@ -102,5 +102,5 @@ jobs:
       prefix_override: ${{ needs.pr_comment.outputs.prRefId }}
       environment: Infra-Test
       command: test
-      prRef: ${{ needs.pr_comment.outputs.prRef }}
+      prRef: ${{ steps.check_command.outputs.prRef }}
     secrets: inherit

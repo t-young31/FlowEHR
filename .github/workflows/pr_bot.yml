@@ -111,6 +111,9 @@ jobs:
     runs-on: ubuntu-latest
     if: success() || failure()
     environment: Infra-Test
+    permissions:
+      checks: write
+      pull-requests: write
     steps:
       - uses: technote-space/workflow-conclusion-action@v3
 

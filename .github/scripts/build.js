@@ -72,7 +72,7 @@ async function getCommandFromComment({ core, context, github }) {
 
           const runTests = await handleTestCommand({ core, github }, parts, "tests", runId, { number: prNumber, authorUsername: prAuthorUsername, repoOwner, repoName, headSha: prHeadSha, refId: prRefId, details: pr }, { username: commentUsername, link: commentLink });
           if (runTests) {
-            command = "run-tests";
+            command = "test";
           }
           break;
         }

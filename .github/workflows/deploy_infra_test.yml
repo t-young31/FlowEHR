@@ -17,6 +17,8 @@ name: Deploy infra test
 on:
   push:
     branches: [main]
+    paths:
+      - 'infrastructure/**'
   workflow_dispatch:
 
 permissions:

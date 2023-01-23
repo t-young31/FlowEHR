@@ -104,3 +104,25 @@ jobs:
       command: test
       prRef: ${{ needs.pr_comment.outputs.prRef }}
     secrets: inherit
+
+  summary:
+    name: Summary
+    needs: [run_test]
+    runs-on: ubuntu-latest
+    if: success() || failure()
+    environment: Infra-Test
+    steps:
+      - uses: technote-space/workflow-conclusion-action@v3
+
+      # For PR builds triggered from comment builds, the GITHUB_REF is set to main
+      # so the checks aren't automatically associated with the PR
+      # If prHeadSha is specified then explicity mark the checks for that SHA
+      - name: Report check status
+        uses: LouisBrunner/checks-action@v1.5.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          sha: ${{ needs.pr_comment.outputs.prHeadSha }}
+          name: "Deploy PR"
+          status: "completed"
+          conclusion: ${{ needs.run_test.result }}
+          details_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

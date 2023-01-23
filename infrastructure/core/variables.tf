@@ -1,21 +1,11 @@
-variable "core_rg_name" {
+variable "naming_prefix" {
   type        = string
-  description = "Core resource group name"
+  description = "Prefix used to name resources"
 }
 
-variable "core_storage_name" {
+variable "truncated_naming_prefix" {
   type        = string
-  description = "Core storage account name"
-}
-
-variable "prefix" {
-  type        = string
-  description = "The prefix to apply to resource names (i.e. to differentiate organisations/projects)"
-}
-
-variable "environment" {
-  type        = string
-  description = "The environment to apply to resource names (to differentiate environments)"
+  description = "Truncated (max 20 chars, no hyphens etc.) prefix to name e.g storage accounts"
 }
 
 variable "location" {

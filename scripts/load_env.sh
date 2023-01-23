@@ -56,9 +56,11 @@ else
   export $(yq e "$GET_LEAF_KEYS|$TF_KEYS| $FORMAT_FOR_ENV_EXPORT" config.yaml)
 fi
 
-MGMT_RG=$("${script_dir}/name.sh" management rg)
-MGMT_STORAGE=$("${script_dir}/name.sh" management str)
-CORE_RG=$("${script_dir}/name.sh" core rg)
-CORE_STORAGE=$("${script_dir}/name.sh" core str)
+NAMING_PREFIX=$("${script_dir}/name_prefix.py")
+echo "Naming resources with prefixed with: ${NAMING_PREFIX}"
 
-export MGMT_RG MGMT_STORAGE CORE_RG CORE_STORAGE STATE_CONTAINER="tfstate"
+TRUNCATED_NAMING_PREFIX=$("${script_dir}/name_prefix.py" --truncated)
+MGMT_RG="${NAMING_PREFIX}-rg-mgmt"
+MGMT_STORAGE="${TRUNCATED_NAMING_PREFIX}strm"
+
+export NAMING_PREFIX TRUNCATED_NAMING_PREFIX MGMT_RG MGMT_STORAGE STATE_CONTAINER="tfstate"

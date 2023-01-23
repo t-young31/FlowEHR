@@ -63,11 +63,9 @@ EOF
 # Here we can define additional variables to be inhereted by each module
 inputs = {
 
-  core_rg_name = get_env("CORE_RG")
-  core_storage_name = get_env("CORE_STORAGE")
   location = get_env("LOCATION")
-  prefix = get_env("PREFIX")
-  environment = get_env("ENVIRONMENT")
+  naming_prefix = get_env("NAMING_PREFIX")
+  truncated_naming_prefix = get_env("TRUNCATED_NAMING_PREFIX")
 
   tags = {
     environment = get_env("ENVIRONMENT")

@@ -1,6 +1,6 @@
 variable "core_rg_name" {
   type        = string
-  description = "Resource group name"
+  description = "Core resource group name"
 }
 
 variable "core_storage_name" {

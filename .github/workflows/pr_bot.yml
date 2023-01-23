@@ -79,7 +79,7 @@ jobs:
           status: "completed"
           conclusion: "success"
 
-  destroy_pr_env:  # Remove the resource group
+  destroy_pr_env:  # Remove the resource group(s)
     needs: [pr_comment]
     if: |
       needs.pr_comment.outputs.command == 'destroy-env'
@@ -89,18 +89,18 @@ jobs:
       prefix_override: ${{ needs.pr_comment.outputs.prRefId }}
       environment: Infra-Test
       command: destroy-no-terraform
+      prRef: ${{ steps.check_command.outputs.prRef }}
     secrets: inherit
 
   run_test:
     needs: [pr_comment]
     if: |
-      needs.pr_comment.outputs.command == 'run-tests'
+      needs.pr_comment.outputs.command == 'test'
     name: Deploy PR env
     uses: ./.github/workflows/devcontainer_make_command.yml
     with:
       prefix_override: ${{ needs.pr_comment.outputs.prRefId }}
       environment: Infra-Test
       command: test
+      prRef: ${{ steps.check_command.outputs.prRef }}
     secrets: inherit
-
-# TODO: think about whether we need a test for the devcontainer build

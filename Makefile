@@ -65,7 +65,7 @@ destroy-all: bootstrap ## Destroy all infrastructure
 
 test: deploy-all destroy-all bootstrap-destroy  ## Test by deploy->destroy
 
-destroy-no-terraform:
+destroy-no-terraform: az-login
 	$(call target_title, "Destroy no terraform") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& . ${MAKEFILE_DIR}/scripts/destroy_no_terraform.sh

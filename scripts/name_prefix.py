@@ -100,7 +100,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-t",
         "--truncated",
-        action='store_true',
+        action="store_true",
         help="Print the truncated naming prefix suitable for storage accounts etc.",
     )
     args = parser.parse_args()

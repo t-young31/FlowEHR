@@ -69,7 +69,7 @@ jobs:
           # Only push the devcontainer if this workflow is triggered from a push to main
           # and if the ACR login has succeeded
           refFilterForPush: refs/heads/main
-          push: ${{ steps.acr_login.outcome == 'success' && 'never' || 'filter'  }}
+          push: ${{ steps.acr_login.outcome == 'success' && 'filter' || 'never'  }}
           env: |
             DOCKER_BUILDKIT=1
             TF_INPUT=0

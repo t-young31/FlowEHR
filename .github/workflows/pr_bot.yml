@@ -79,6 +79,17 @@ jobs:
           status: "completed"
           conclusion: "success"
 
+      - name: Report check status start
+        if: ${{ steps.check_command.outputs.command == 'test' }}
+        uses: LouisBrunner/checks-action@v1.5.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          sha: ${{ inputs.prHeadSha }}
+          name: "Deploy PR"
+          status: "in_progress"
+          details_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+
   destroy_pr_env:  # Remove the resource group(s)
     needs: [pr_comment]
     if: |
@@ -114,10 +125,9 @@ jobs:
       checks: write
       pull-requests: write
     steps:
-
       # For PR builds triggered from comment builds, the GITHUB_REF is set to main
       # so the checks aren't automatically associated with the PR
-      # If prHeadSha is specified then explicity mark the checks for that SHA
+      # If prHeadSha is specified then explicitly mark the checks for that SHA
       - name: Report check status
         uses: LouisBrunner/checks-action@v1.5.0
         with:

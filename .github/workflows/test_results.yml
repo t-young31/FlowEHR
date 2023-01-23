@@ -17,7 +17,7 @@ name: Publish test results
 
 on:
   workflow_run:
-    workflows: ["Docker build"]
+    workflows: ["PR comment"]
     types:
       - completed
 

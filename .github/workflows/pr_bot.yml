@@ -94,7 +94,7 @@ jobs:
   run_test:
     needs: [pr_comment]
     if: |
-      needs.pr_comment.outputs.command == 'run-tests'
+      needs.pr_comment.outputs.command == 'test'
     name: Deploy PR env
     uses: ./.github/workflows/devcontainer_make_command.yml
     with:

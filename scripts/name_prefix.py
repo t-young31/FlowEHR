@@ -69,10 +69,10 @@ def truncated_naming_prefix():
            for storage accounts. And the storage account naming requirements:
            learn.microsoft.com/en-us/azure/storage/common/storage-account-overview
 
-        3. Must not contain any non-alpha numeric characters
+        3. Must not contain any non-alpha numeric characters or upper case letters
     """
     prefix = _remove_non_alpha_numeric_chars(naming_prefix())
-    return _last_n_characters(prefix, n=20)
+    return _last_n_characters(prefix.lower(), n=20)
 
 
 def test_naming() -> None:

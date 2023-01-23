@@ -72,6 +72,10 @@ def truncated_naming_prefix():
         3. Must not contain any non-alpha numeric characters or upper case letters
     """
     prefix = _remove_non_alpha_numeric_chars(naming_prefix())
+
+    if prefix[0].isdigit():
+        prefix = f"a{prefix}"
+
     return _last_n_characters(prefix.lower(), n=20)
 
 
@@ -85,6 +89,7 @@ def test_naming() -> None:
             "a_long_prefix-a_long_env_name",
             "ngprefixalongenvname",
         ),
+        ("1aprefix", "dev"): ("1aprefix-dev", "a1aprefixdev"),
     }
 
     for (prefix, environment), (expected, expected_t) in test_data.items():

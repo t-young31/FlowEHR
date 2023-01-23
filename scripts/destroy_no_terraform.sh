@@ -19,7 +19,7 @@ set -o nounset
 
 az group list -o table | while read -r line ; do
 
-  if echo "$line" | grep -q "${PREFIX}-${ENVIRONMENT}"; then
+  if echo "$line" | grep -q "${NAMING_PREFIX}"; then
     rg_name=$(echo "$line" | awk '{print $1;}')
     echo "Deleting ${rg_name}..."
     az group delete --resource-group "$rg_name" --yes

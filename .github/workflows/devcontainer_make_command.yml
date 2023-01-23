@@ -55,11 +55,11 @@ jobs:
 
       - name: ACR Login
         id: acr_login
+        continue-on-error: true
         run: |
           az acr login --name "${{ secrets.DEVCONTAINER_ACR_NAME }}"
 
       - name: Build and run dev container task
-        if: success() || failure()  # ACR may not exist with the make command creating it
         uses: devcontainers/ci@v0.2
         with:
           imageName: "${{ secrets.DEVCONTAINER_ACR_NAME }}.azurecr.io/flowehr/devcontainer"

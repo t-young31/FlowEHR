@@ -29,10 +29,10 @@ on:
         type: string
         required: false
         description: An override for the naming prefix
-      prRef:
+      sha:
         type: string
         required: false
-        description: Ref to override the default GitHub checkout
+        description: Commit SHA to override the default GitHub checkout
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -55,7 +55,7 @@ jobs:
           persist-credentials: false
           # if the following values are missing (i.e. not triggered via comment workflow)
           # then the default checkout will apply
-          ref: ${{ inputs.prRef }}
+          ref: ${{ inputs.sha }}
 
       - name: Azure Login
         uses: azure/login@v1

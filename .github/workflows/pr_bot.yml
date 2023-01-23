@@ -89,7 +89,7 @@ jobs:
       prefix_override: ${{ needs.pr_comment.outputs.prRefId }}
       environment: Infra-Test
       command: destroy-no-terraform
-      prRef: ${{ needs.pr_comment.outputs.prRef }}
+      sha: ${{ needs.pr_comment.outputs.prHeadSha }}
     secrets: inherit
 
   run_test:
@@ -102,12 +102,12 @@ jobs:
       prefix_override: ${{ needs.pr_comment.outputs.prRefId }}
       environment: Infra-Test
       command: test
-      prRef: ${{ needs.pr_comment.outputs.prRef }}
+      sha: ${{ needs.pr_comment.outputs.prHeadSha }}
     secrets: inherit
 
   summary:
     name: Summary
-    needs: [run_test]
+    needs: [pr_comment, run_test]
     runs-on: ubuntu-latest
     environment: Infra-Test
     permissions:

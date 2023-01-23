@@ -85,7 +85,7 @@ jobs:
         uses: LouisBrunner/checks-action@v1.5.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          sha: ${{ inputs.prHeadSha }}
+          sha: ${{ steps.check_command.outputs.prHeadSha }}
           name: "Deploy PR"
           status: "in_progress"
           details_url: "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"

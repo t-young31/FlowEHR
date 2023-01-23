@@ -29,6 +29,10 @@ on:
         type: string
         required: false
         description: An override for the naming prefix
+      prRef:
+        type: string
+        required: false
+        description: Ref to override the default GitHub checkout
     secrets:
       AZURE_CREDENTIALS:
         required: true
@@ -47,6 +51,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+          # if the following values are missing (i.e. not triggered via comment workflow)
+          # then the default checkout will apply
+          ref: ${{ inputs.prRef }}
 
       - name: Azure Login
         uses: azure/login@v1

@@ -1,11 +1,11 @@
 resource "azurerm_resource_group" "core" {
-  name     = var.core_rg_name
+  name     = "${var.naming_prefix}-rg"
   location = var.location
   tags     = var.tags
 }
 
 resource "azurerm_virtual_network" "core" {
-  name                = "${var.prefix}-${var.environment}-vnet"
+  name                = "${var.naming_prefix}-vnet"
   resource_group_name = azurerm_resource_group.core.name
   location            = azurerm_resource_group.core.location
   address_space       = ["10.0.0.0/16"]
@@ -13,7 +13,7 @@ resource "azurerm_virtual_network" "core" {
 }
 
 resource "azurerm_subnet" "core" {
-  name                 = "${var.prefix}-${var.environment}-subnet-core"
+  name                 = "${var.naming_prefix}-subnet-core"
   resource_group_name  = azurerm_resource_group.core.name
   virtual_network_name = azurerm_virtual_network.core.name
   address_prefixes     = ["10.0.2.0/24"]
@@ -21,7 +21,7 @@ resource "azurerm_subnet" "core" {
 }
 
 resource "azurerm_storage_account" "core" {
-  name                     = var.core_storage_name
+  name                     = "${var.truncated_naming_prefix}strg"
   resource_group_name      = azurerm_resource_group.core.name
   location                 = azurerm_resource_group.core.location
   account_tier             = "Standard"
@@ -36,7 +36,7 @@ resource "azurerm_storage_account" "core" {
 }
 
 resource "azurerm_key_vault" "core" {
-  name                        = "${var.prefix}-${var.environment}-kv"
+  name                        = "${var.truncated_naming_prefix}-kv"
   location                    = azurerm_resource_group.core.location
   resource_group_name         = azurerm_resource_group.core.name
   enabled_for_disk_encryption = true

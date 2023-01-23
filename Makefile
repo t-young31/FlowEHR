@@ -69,3 +69,6 @@ destroy-no-terraform: az-login
 	$(call target_title, "Destroy no terraform") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& . ${MAKEFILE_DIR}/scripts/destroy_no_terraform.sh
+
+clean: ## Remove all local terraform state
+	find ${MAKEFILE_DIR} -type d -name ".terraform" -exec rm -rf "{}" \;

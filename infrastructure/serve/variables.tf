@@ -19,7 +19,7 @@ variable "naming_prefix" {
 
 variable "truncated_naming_prefix" {
   type        = string
-  description = "Truncated (max 20 chars, no hyphens etc.) prefix to name e.g storage accounts"
+  description = "Truncated (max 20 chars, no hyphens etc.) prefix for e.g storage accounts"
 }
 
 variable "tags" {

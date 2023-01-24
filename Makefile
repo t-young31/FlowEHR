@@ -51,27 +51,32 @@ bootstrap-destroy: az-login ## Destroy boostrap rg
 deploy: bootstrap ## Deploy all infrastructure
 	$(call target_title, "Deploy All") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
-	&& terragrunt run-all apply --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure --terragrunt-non-interactive
+	&& cd ${MAKEFILE_DIR}/infrastructure \
+	&& terragrunt run-all apply --terragrunt-non-interactive
 
 deploy-core: bootstrap ## Deploy core infrastructure
 	$(call target_title, "Deploy Core Infrastructure") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
-	&& terragrunt apply ${MAKEFILE_DIR}/infrastructure/core
+	&& cd ${MAKEFILE_DIR}/infrastructure/core \
+	&& terragrunt run-all apply --terragrunt-include-external-dependencies --terragrunt-non-interactive
 
 deploy-transform: bootstrap ## Deploy transform infrastructure
 	$(call target_title, "Deploy Transform Infrastructure") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
-	&& terragrunt run-all apply --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure/transform --terragrunt-non-interactive
+	&& cd ${MAKEFILE_DIR}/infrastructure/transform \
+	&& terragrunt run-all apply --terragrunt-include-external-dependencies --terragrunt-non-interactive
 
 deploy-serve: bootstrap ## Deploy serve infrastructure
 	$(call target_title, "Deploy Serve Infrastructure") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
-	&& terragrunt run-all apply --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure/serve --terragrunt-non-interactive
+	&& cd ${MAKEFILE_DIR}/infrastructure/serve \
+	&& terragrunt run-all apply --terragrunt-include-external-dependencies --terragrunt-non-interactive
 
 destroy: az-login ## Destroy all infrastructure
 	$(call target_title, "Destroy All") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
-	&& terragrunt run-all destroy --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure --terragrunt-non-interactive
+	&& cd ${MAKEFILE_DIR}/infrastructure \
+	&& terragrunt run-all destroy --terragrunt-non-interactive
 
 test: deploy destroy bootstrap-destroy  ## Test by deploy->destroy
 

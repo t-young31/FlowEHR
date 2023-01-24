@@ -50,7 +50,7 @@ resource "azurerm_storage_account" "core" {
 }
 
 resource "azurerm_key_vault" "core" {
-  name                        = "${var.naming_prefix}-kv"
+  name                        = "${var.truncated_naming_prefix}-kv"
   location                    = azurerm_resource_group.core.location
   resource_group_name         = azurerm_resource_group.core.name
   enabled_for_disk_encryption = true

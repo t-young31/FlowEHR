@@ -71,6 +71,8 @@ jobs:
       - uses: dorny/paths-filter@v2
         id: changes
         with:
+          base: main
+          ref: ${{ steps.check_command.outputs.prHeadSha }}
           filters: |
             core:
               - 'infrastructure/core/**'

@@ -5,64 +5,66 @@ FlowEHR is a safe, secure &amp; cloud-native development &amp; deployment platfo
 > This repository is a _work in progress_. We're working towards a v0.1.0 release
 
 
-## Deployment
+## Getting started
 
-### Local
+This repository includes a [Dev Container](https://code.visualstudio.com/docs/devcontainers/containers) to avoid "it works on my machine" scenarios. 
 
-0. <details>
-    <summary>Open this repository in a devcontainer</summary>
+Simply clone this repo:
 
-    Clone the repo with
-    ```bash
-    git clone https://github.com/UCLH-Foundry/FlowEHR
-    ```
+```bash
+git clone https://github.com/UCLH-Foundry/FlowEHR
+```
+Then open it in [VS Code](https://code.visualstudio.com) and, when prompted, click to "Open in Container" (make sure Docker is running on your host first). This will create a container with all the required packages for developing this repository.
 
-    and open it inside [Visual Studio Code](https://code.visualstudio.com/)
-    [devcontainer](https://code.visualstudio.com/docs/devcontainers/tutorial)
-    for a consistent developer environment.
+## Configuring
 
-</details>
+Local deployment (i.e. non CI/CD) requires a `config.yaml` file in the root. Copy the `config.sample.yaml` file and save it as `config.yaml`.
 
-1. <details>
-    <summary>Login to azure</summary>
+```bash
+cp config.sample.yaml config.yaml
+```
 
-    Use the [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/) to login to an Azure
-    subscription
+Then edit `config.yaml` and specify the following values:
+
+- `prefix` - a prefix (max length 4 chars) to apply to all deployed resources (i.e. `flwr`)
+- `environment` - a unique name for your environment (i.e. `jgdev`)
+- `location` - the [Azure region](https://azuretracks.com/2021/04/current-azure-region-names-reference/) you wish to deploy resources to
+- `arm_subscription_id` - the [Azure subscription id](https://learn.microsoft.com/en-us/azure/azure-portal/get-subscription-tenant-id) you wish to deploy to
+
+For the full reference of possible configuration values, see the [config schema file](./config_schema.json).
+
+## Deploying
+### Locally
+
+1. Log in to Azure
+
+    Run `az login` to authenticate to Azure
 
     ```bash
     az login
     ```
-</details>
 
+2. Run `make all`
 
-2. <details>
-    <summary>Copy and edit the sample configuration file</summary>
-
-    Local deployment i.e. non CI/CD requires a `config.yaml` file. Copy and edit as appropriate.
-    For example, adding a naming prefix
+    To bootstrap Terraform, and deploy all infrastructure, run
 
     ```bash
-    cp config.sample.yaml config.yaml
+    make all
     ```
-</details>
 
-
-3. <details>
-    <summary>Run a `make` command</summary>
-
-    For example, to make the core infrastructure
+    Alternatively, you can deploy individual modules separately with their corresponding make command:
 
     ```bash
-    make core
+    make deploy-core
     ```
 
-    to see all options
+    To see all options:
 
     ```bash
     make help
     ```
-</details>
 
+    > Note: If you're deploying for the first time and not using `make all` (i.e. using `make deploy-core`), ensure you have ran `make bootstrap` first.
 
 ### CI (GitHub Actions)
 

@@ -20,7 +20,7 @@ LINTER_REGEX_INCLUDE?=all # regex to specify which files to include in local lin
 
 target_title = @echo -e "\n\e[34m»»» 🌺 \e[96m$(1)\e[0m..."
 
-all: bootstrap deploy-all
+all: bootstrap deploy
 
 help: ## Show this help
 	@echo
@@ -29,8 +29,13 @@ help: ## Show this help
         | column -t -s '|'
 	@echo
 
-az-login:  ## Check logged in/log into azure with a service principal 
+lint: ## Call pre-commit hooks to lint files & check for headers 
+	$(call target_title, "Linting") \
+	&& pre-commit run --all-files
+
+az-login: ## Check logged in/log into azure with a service principal 
 	$(call target_title, "Log-in to Azure") \
+	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& . ${MAKEFILE_DIR}/scripts/az_login.sh
 
 bootstrap: az-login ## Boostrap Terraform backend
@@ -43,25 +48,31 @@ bootstrap-destroy: az-login ## Destroy boostrap rg
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& . ${MAKEFILE_DIR}/infrastructure/bootstrap.sh -d
 
-deploy-all: bootstrap  ## Deploy all infrastructure
+deploy: az-login ## Deploy all infrastructure
 	$(call target_title, "Deploy All") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& terragrunt run-all apply --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure --terragrunt-non-interactive
 
-deploy-core: bootstrap  ## Deploy core infrastructure
-	$(call target_title, "Deploy Core") \
+deploy-core: az-login ## Deploy core infrastructure
+	$(call target_title, "Deploy Core Infrastructure") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
-	&& terragrunt apply --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure/core
+	&& terragrunt apply ${MAKEFILE_DIR}/infrastructure/core
 
-deploy-transform: bootstrap  ## Deploy transform infrastructure
-	$(call target_title, "Deploy Transform") \
+deploy-transform: az-login ## Deploy transform infrastructure
+	$(call target_title, "Deploy Transform Infrastructure") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& terragrunt apply --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure/transform
 
-destroy-all: bootstrap ## Destroy all infrastructure
+deploy-serve: az-login ## Deploy serve infrastructure
+	$(call target_title, "Deploy Serve Infrastructure") \
+	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
+	&& terragrunt apply --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure/serve
+
+destroy: az-login ## Destroy all infrastructure
 	$(call target_title, "Destroy All") \
 	&& . ${MAKEFILE_DIR}/scripts/load_env.sh \
 	&& terragrunt run-all destroy --terragrunt-working-dir ${MAKEFILE_DIR}/infrastructure --terragrunt-non-interactive
+
 
 test: deploy-all destroy-all bootstrap-destroy  ## Test by deploy->destroy
 

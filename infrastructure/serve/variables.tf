@@ -12,6 +12,28 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-include "root" {
-  path = find_in_parent_folders()
+variable "naming_prefix" {
+  type        = string
+  description = "Prefix used to name resources"
+}
+
+variable "truncated_naming_prefix" {
+  type        = string
+  description = "Truncated (max 20 chars, no hyphens etc.) prefix to name e.g storage accounts"
+}
+
+variable "tags" {
+  type = map(any)
+}
+
+variable "core_rg_name" {
+  type = string
+}
+
+variable "core_rg_location" {
+  type = string
+}
+
+variable "core_kv_id" {
+  type = string
 }

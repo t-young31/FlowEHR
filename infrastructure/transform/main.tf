@@ -12,6 +12,11 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-include "root" {
-  path = find_in_parent_folders()
+resource "azurerm_databricks_workspace" "transform" {
+  name                        = "${var.naming_prefix}-dbks"
+  resource_group_name         = var.core_rg_name
+  managed_resource_group_name = "${var.naming_prefix}-rg-dbks"
+  location                    = var.core_rg_location
+  sku                         = "standard"
+  tags                        = var.tags
 }

@@ -64,6 +64,10 @@ terraform {
       source = "hashicorp/random"
       version = "3.4.3"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = "3.2.1"
+    }
   }
 }
 EOF

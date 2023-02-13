@@ -74,7 +74,7 @@ resource "azurerm_linux_web_app" "test" {
   app_settings = {
     "STATE_STORE_ENDPOINT"  = azurerm_cosmosdb_account.test.endpoint
     "COSMOSDB_ACCOUNT_NAME" = azurerm_cosmosdb_account.test.name
-    "GOLD_STORE_FDQN"       = azurerm_mssql_server.gold_store.fully_qualified_domain_name
+    "GOLD_STORE_FDQN"       = azurerm_mssql_server.test.fully_qualified_domain_name
   }
 
   identity {
@@ -106,8 +106,9 @@ resource "azurerm_cosmosdb_account" "test" {
 }
 
 resource "azurerm_cosmosdb_sql_database" "test" {
-  name         = "test-db"
-  account_name = azurerm_cosmosdb_account.test.name
+  name                = "test-db"
+  account_name        = azurerm_cosmosdb_account.test.name
+  resource_group_name = var.core_rg_name
 }
 
 resource "azurerm_role_assignment" "cosmos_contributor" {

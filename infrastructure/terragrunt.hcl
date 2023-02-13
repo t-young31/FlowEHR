@@ -60,6 +60,10 @@ terraform {
       source = "databricks/databricks"
       version = "1.9.1"
     }
+    random = {
+      source = "hashicorp/random"
+      version = "3.4.3"
+    }
   }
 }
 EOF

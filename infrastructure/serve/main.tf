@@ -105,25 +105,13 @@ resource "azurerm_cosmosdb_account" "test" {
   }
 }
 
-resource "azurerm_cosmosdb_sql_role_definition" "reader" {
-  name                = "testsqlroledef"
-  resource_group_name = var.core_rg_name
-  type                = "CustomRole"
-  account_name        = azurerm_cosmosdb_account.test.name
-  assignable_scopes   = [azurerm_cosmosdb_account.test.id]
-
-  permissions {
-    data_actions = ["Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/*"]
-  }
+resource "azurerm_cosmosdb_sql_database" "test" {
+  name         = "test-db"
+  account_name = azurerm_cosmosdb_account.test.name
 }
 
-resource "random_uuid" "web_app_reader" {}
-
-resource "azurerm_cosmosdb_sql_role_assignment" "web_app_reader" {
-  name                = random_uuid.web_app_reader.result
-  resource_group_name = var.core_rg_name
-  account_name        = azurerm_cosmosdb_account.test.name
-  role_definition_id  = azurerm_cosmosdb_sql_role_definition.reader.id
-  principal_id        = azurerm_linux_web_app.test.identity.0.principal_id
-  scope               = azurerm_cosmosdb_account.test.id
+resource "azurerm_role_assignment" "cosmos_contributor" {
+  scope                = azurerm_cosmosdb_sql_database.test.id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_linux_web_app.test.identity.0.principal_id
 }

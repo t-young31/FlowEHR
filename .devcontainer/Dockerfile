@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 # limitations under the License.
 # You can pick any Debian/Ubuntu-based image. 😊
-FROM mcr.microsoft.com/vscode/devcontainers/python:3.10
+FROM mcr.microsoft.com/vscode/devcontainers/python:3.10-bullseye
 
 COPY library-scripts/*.sh /tmp/library-scripts/
 
@@ -67,6 +67,16 @@ RUN npm install -g pajv@${PAJV_VERSION}
 
 ARG PRECOMMIT_VERSION="2.21.0"
 RUN python3 -m pip install pre-commit=="${PRECOMMIT_VERSION}" --no-cache-dir
+
+# ARG MSSQL_TOOLS_VERSION=""
+# ARG ODBC_DEV_VERSION=""
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add - \
+    && apt-get -y install software-properties-common && apt-get update \
+    && apt-add-repository https://packages.microsoft.com/debian/11/prod \
+    && apt-get update \
+    && ACCEPT_EULA=Y apt-get -y install --no-install-recommends sqlcmd unixodbc-dev \
+    && echo 'export PATH="$PATH:/usr/bin"' >> ~/.bashrc \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies for data transform pipeline
 ARG SPARK_VERSION="3.3.1"

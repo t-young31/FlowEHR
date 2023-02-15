@@ -111,8 +111,34 @@ resource "azurerm_cosmosdb_sql_database" "test" {
   resource_group_name = var.core_rg_name
 }
 
-resource "azurerm_role_assignment" "cosmos_contributor" {
-  scope                = azurerm_cosmosdb_sql_database.test.id
-  role_definition_name = "Contributor"
-  principal_id         = azurerm_linux_web_app.test.identity.0.principal_id
+data "azurerm_cosmosdb_sql_role_definition" "contributor" {
+  role_definition_id = "00000000-0000-0000-0000-000000000002"
+  # role_definition_name  = "Cosmos DB Built-in Data Contributor"
+  account_name        = azurerm_cosmosdb_account.test.name
+  resource_group_name = var.core_rg_name
+}
+
+resource "azurerm_cosmosdb_sql_role_definition" "example" {
+  name                = "reader"
+  account_name        = azurerm_cosmosdb_account.test.name
+  resource_group_name = var.core_rg_name
+  type                = "CustomRole"
+  assignable_scopes   = [azurerm_cosmosdb_sql_database.test.id]
+
+  permissions {
+    data_actions = [
+      "Microsoft.DocumentDB/databaseAccounts/readMetadata",
+      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/items/read",
+      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/executeQuery",
+      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/readChangeFeed"
+    ]
+  }
+}
+
+resource "azurerm_cosmosdb_sql_role_assignment" "example" {
+  role_definition_id  = azurerm_cosmosdb_sql_role_definition.example.id
+  account_name        = azurerm_cosmosdb_account.test.name
+  resource_group_name = var.core_rg_name
+  principal_id        = data.azurerm_client_config.current.object_id
+  scope               = azurerm_cosmosdb_sql_database.test.id
 }

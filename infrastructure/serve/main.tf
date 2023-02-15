@@ -33,7 +33,6 @@ resource "azurerm_machine_learning_workspace" "serve" {
   count = 0
   # TODO: remove
 
-
   name                    = "aml-${var.naming_suffix}"
   location                = var.core_rg_location
   resource_group_name     = var.core_rg_name
@@ -65,10 +64,10 @@ resource "azurerm_linux_web_app" "test" {
     always_on  = true
     ftps_state = "Disabled"
 
-    # application_stack {
-    #   docker_image     = ""
-    #   docker_image_tag = ""
-    # }
+    application_stack {
+      docker_image     = "tyoung31/test-app"
+      docker_image_tag = "latest"
+    }
   }
 
   app_settings = {
@@ -111,34 +110,33 @@ resource "azurerm_cosmosdb_sql_database" "test" {
   resource_group_name = var.core_rg_name
 }
 
-data "azurerm_cosmosdb_sql_role_definition" "contributor" {
-  role_definition_id = "00000000-0000-0000-0000-000000000002"
-  # role_definition_name  = "Cosmos DB Built-in Data Contributor"
+resource "random_uuid" "test" {}
+
+resource "azurerm_cosmosdb_sql_role_assignment" "example" {
+  name                = random_uuid.test.result
   account_name        = azurerm_cosmosdb_account.test.name
   resource_group_name = var.core_rg_name
+  role_definition_id  = azurerm_cosmosdb_sql_role_definition.test.id
+  principal_id        = azurerm_linux_web_app.test.identity.0.principal_id
+  scope               = "${azurerm_cosmosdb_account.test.id}/dbs/${azurerm_cosmosdb_sql_database.test.name}"
 }
 
-resource "azurerm_cosmosdb_sql_role_definition" "example" {
-  name                = "reader"
+resource "random_uuid" "example" {}
+
+resource "azurerm_cosmosdb_sql_role_definition" "test" {
+  role_definition_id  = "43e616e2-bbe0-8a51-7e1c-6e274a5525d9"
   account_name        = azurerm_cosmosdb_account.test.name
   resource_group_name = var.core_rg_name
-  type                = "CustomRole"
-  assignable_scopes   = [azurerm_cosmosdb_sql_database.test.id]
+  name                = "readwrite"
+  assignable_scopes = [
+    "${azurerm_cosmosdb_account.test.id}/dbs/${azurerm_cosmosdb_sql_database.test.name}"
+  ]
 
   permissions {
     data_actions = [
       "Microsoft.DocumentDB/databaseAccounts/readMetadata",
-      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/items/read",
-      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/executeQuery",
-      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/readChangeFeed"
+      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/*",
+      "Microsoft.DocumentDB/databaseAccounts/sqlDatabases/containers/items/*"
     ]
   }
-}
-
-resource "azurerm_cosmosdb_sql_role_assignment" "example" {
-  role_definition_id  = azurerm_cosmosdb_sql_role_definition.example.id
-  account_name        = azurerm_cosmosdb_account.test.name
-  resource_group_name = var.core_rg_name
-  principal_id        = data.azurerm_client_config.current.object_id
-  scope               = azurerm_cosmosdb_sql_database.test.id
 }

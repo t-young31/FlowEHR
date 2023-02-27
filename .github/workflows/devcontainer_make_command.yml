@@ -102,5 +102,5 @@ jobs:
             ENVIRONMENT=${{ inputs.environment }}
             DEVCONTAINER_ACR_NAME=${{ secrets.DEVCONTAINER_ACR_NAME }}
             ORG_GH_TOKEN=${{ secrets.ORG_GH_TOKEN }}
-            DATA_SOURCE_CONNECTIONS=${{ secrets.DATA_SOURCE_CONNECTIONS }}
+            DATA_SOURCE_CONNECTIONS=${{ (secrets.DATA_SOURCE_CONNECTIONS != '' && secrets.DATA_SOURCE_CONNECTIONS) || '[]' }}
             USE_RANDOM_ADDRESS_SPACE=${{ (inputs.suffix_override != '' && '1') || '0' }}

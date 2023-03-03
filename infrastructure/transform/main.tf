@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+# Test modification
+
 resource "azurerm_databricks_workspace" "databricks" {
   name                                  = "dbks-${var.naming_suffix}"
   resource_group_name                   = var.core_rg_name

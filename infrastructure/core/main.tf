@@ -12,6 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+# Test modification
+
 resource "azurerm_resource_group" "core" {
   name     = "rg-${var.naming_suffix}"
   location = var.location

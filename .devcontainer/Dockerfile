@@ -49,7 +49,7 @@ CMD [ "sleep", "infinity" ]
 
 # Install additional tools
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends yamllint
+    && apt-get -y install --no-install-recommends yamllint parallel
 
 ARG YQ_VERSION="v4.30.6"
 RUN export ARCH=$(dpkg --print-architecture); curl -L --fail -o /usr/local/bin/yq "https://github.com/mikefarah/yq/releases/download/${YQ_VERSION}/yq_linux_${ARCH}" \
@@ -61,9 +61,6 @@ RUN export ARCH="$(dpkg --print-architecture)"; \
     if [ "$ARCH" = amd64 ]; then export ARCH=x86_64; fi; \
     wget -qO- "https://github.com/koalaman/shellcheck/releases/download/${SC_VERSION}/shellcheck-${SC_VERSION}.linux.${ARCH}.tar.xz" | tar -xJv \
     && cp "shellcheck-${SC_VERSION}/shellcheck" /usr/local/bin/
-
-ARG PAJV_VERSION="1.2.0"
-RUN npm install -g pajv@${PAJV_VERSION}
 
 ARG PRECOMMIT_VERSION="2.21.0"
 RUN python3 -m pip install pre-commit=="${PRECOMMIT_VERSION}" --no-cache-dir
@@ -80,9 +77,7 @@ RUN sudo apt-get update \
     && echo 'export PATH="$PATH:/opt/mssql-tools18/bin"' >> ~/.bashrc \
     && sudo apt-get update && sudo apt-get install -y unixodbc unixodbc-dev
 
-# Install Python dependencies for data transform pipeline
-ARG NUMPY_VERSION="1.24.2"
-ARG DATABRICKS_CLI_VERSION="0.17.4"
+# Install Python dependencies
 ARG PANDAS_VERSION="1.5.3"
 ARG SQLALCHEMY_VERSION="2.0.4"
 ARG PYODBC_VERSION="4.0.35"
@@ -90,23 +85,8 @@ ARG PYTHON_BUILD_VERSION="0.10.0"
 RUN python3 -m pip install --no-cache-dir \
     pyodbc=="${PYODBC_VERSION}" \
     build=="${PYTHON_BUILD_VERSION}" \
-    numpy=="${NUMPY_VERSION}" \
-    databricks-cli=="${DATABRICKS_CLI_VERSION}" \
     sqlalchemy=="${SQLALCHEMY_VERSION}" \
     pandas=="${PANDAS_VERSION}"
-
-# Get the local Spark installed to be able to run unit tests
-# Borrowed from https://github.com/beandrad/pyspark-sample/blob/main/.devcontainer/Dockerfile#L36
-COPY config.transform.yaml /tmp/config.transform.yaml
-RUN mkdir -p /tmp/docker-downloads \
-   && SPARK_VERSION=$(yq e .spark_version /tmp/config.transform.yaml) \
-   && python3 -m pip install --no-cache-dir pyspark=="${SPARK_VERSION}" \
-   && apt-get update \
-   && apt-get -y install openjdk-11-jdk wget --no-install-recommends \
-   && wget -q https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz -O /tmp/docker-downloads/spark-${SPARK_VERSION}-bin-hadoop3.tgz \
-   && tar -xvzf /tmp/docker-downloads/spark-${SPARK_VERSION}-bin-hadoop3.tgz \
-   && mv spark-${SPARK_VERSION}-bin-hadoop3 /opt/spark \
-   && rm -rf /tmp/docker-downloads
 
 # Install prerequsites for using this container as a GitHub runner. Assuming an x86 runner
 COPY .devcontainer/library-scripts/start-gh-runner.sh /tmp/library-scripts/
@@ -115,6 +95,3 @@ RUN mkdir -p /tmp/actions-runner \
     && curl -o runner.tar.gz -L https://github.com/actions/runner/releases/download/${GH_RUNNER_VERSION}/actions-runner-linux-x64-2.302.1.tar.gz \
     && tar xzf runner.tar.gz -C /tmp/actions-runner \
     && rm runner.tar.gz
-
-ENV SPARK_HOME=/opt/spark
-ENV PATH=$PATH:$SPARK_HOME/bin

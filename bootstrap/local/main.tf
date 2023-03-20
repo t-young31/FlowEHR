@@ -12,9 +12,18 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-data "azurerm_client_config" "current" {}
+module "naming" {
+  source          = "../shared/naming"
+  flowehr_id      = var.flowehr_id
+  environment     = var.environment
+  suffix_override = var.suffix_override
+}
 
-data "azurerm_subscription" "primary" {}
-
-# get the MSGraph app
-data "azuread_application_published_app_ids" "well_known" {}
+# Only deploy management resources locally; otherwise we use existing shared ci resources
+module "management" {
+  count                   = var.tf_in_automation ? 0 : 1
+  source                  = "../shared/management"
+  naming_suffix           = module.naming.suffix
+  naming_suffix_truncated = module.naming.suffix_truncated
+  location                = var.location
+}

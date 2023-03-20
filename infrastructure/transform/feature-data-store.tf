@@ -13,8 +13,11 @@
 #  limitations under the License.
 
 resource "random_password" "sql_admin_password" {
-  length  = 16
-  special = true
+  length      = 16
+  min_lower   = 2
+  min_upper   = 2
+  min_numeric = 2
+  min_special = 2
 }
 
 # AAD App + secret to set as AAD Admin of SQL Server
@@ -38,7 +41,7 @@ resource "azurerm_mssql_server" "sql_server_features" {
   version                              = "12.0"
   administrator_login                  = local.sql_server_features_admin_username
   administrator_login_password         = random_password.sql_admin_password.result
-  public_network_access_enabled        = var.local_mode
+  public_network_access_enabled        = !var.tf_in_automation
   outbound_network_restriction_enabled = true
   tags                                 = var.tags
   azuread_administrator {
@@ -73,9 +76,9 @@ resource "azuread_app_role_assignment" "sql_application_read_all" {
   resource_object_id  = azuread_service_principal.msgraph.object_id
 }
 
-# optional firewall rule when running in local_mode
+# optional firewall rule when running locally
 resource "azurerm_mssql_firewall_rule" "deployer_ip_exception" {
-  count            = var.local_mode == true ? 1 : 0
+  count            = var.tf_in_automation ? 0 : 1
   name             = "DeployerIP"
   server_id        = azurerm_mssql_server.sql_server_features.id
   start_ip_address = var.deployer_ip_address
@@ -121,8 +124,9 @@ resource "null_resource" "create_sql_user" {
   # load a csv file into a new SQL table
   provisioner "local-exec" {
     command = <<EOF
-      python ../../scripts/sql/create_sql_user.py
-      python ../../scripts/sql/load_csv_data.py
+      SCRIPTS_DIR="../../scripts"
+      $SCRIPTS_DIR/retry.sh python $SCRIPTS_DIR/sql/create_sql_user.py
+      $SCRIPTS_DIR/retry.sh python $SCRIPTS_DIR/sql/load_csv_data.py
     EOF
     environment = {
       SERVER          = azurerm_mssql_server.sql_server_features.fully_qualified_domain_name
@@ -179,29 +183,6 @@ resource "azurerm_key_vault_secret" "flowehr_databricks_sql_spn_app_secret" {
   name         = "flowehr-dbks-sql-app-secret"
   value        = azuread_application_password.flowehr_databricks_sql.value
   key_vault_id = var.core_kv_id
-}
-
-# Push SPN details to databricks secret scope
-resource "databricks_secret" "flowehr_databricks_sql_spn_app_id" {
-  key          = "flowehr-dbks-sql-app-id"
-  string_value = azuread_service_principal.flowehr_databricks_sql.application_id
-  scope        = databricks_secret_scope.secrets.id
-}
-
-resource "databricks_secret" "flowehr_databricks_sql_spn_app_secret" {
-  key          = "flowehr-dbks-sql-app-secret"
-  string_value = azuread_application_password.flowehr_databricks_sql.value
-  scope        = databricks_secret_scope.secrets.id
-}
-resource "databricks_secret" "flowehr_databricks_sql_server" {
-  key          = "flowehr-dbks-sql-server"
-  string_value = azurerm_mssql_server.sql_server_features.fully_qualified_domain_name
-  scope        = databricks_secret_scope.secrets.id
-}
-resource "databricks_secret" "flowehr_databricks_sql_database" {
-  key          = "flowehr-dbks-sql-database"
-  string_value = azurerm_mssql_database.feature_database.name
-  scope        = databricks_secret_scope.secrets.id
 }
 
 # Private DNS + endpoint for SQL Server

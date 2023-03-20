@@ -13,22 +13,18 @@
 #  limitations under the License.
 
 variable "naming_suffix" {
-  type        = string
-  description = "Suffix used to name resources"
+  type = string
 }
 
-variable "truncated_naming_suffix" {
-  type        = string
-  description = "Truncated (max 20 chars, no hyphens etc.) suffix to name e.g storage accounts"
-}
-
-variable "access_databricks_management_publicly" {
-  type        = bool
-  description = "Whether to allow access to the Databricks workspace management plane via a public network"
-  default     = true
+variable "naming_suffix_truncated" {
+  type = string
 }
 
 variable "databricks_host_address_space" {
+  type = string
+}
+
+variable "databricks_container_address_space" {
   type = string
 }
 
@@ -68,14 +64,39 @@ variable "deployer_ip_address" {
   type = string
 }
 
-variable "local_mode" {
+variable "tf_in_automation" {
   type = bool
 }
 
+variable "access_databricks_management_publicly" {
+  type        = bool
+  description = "Whether to allow access to the Databricks workspace management plane via a public network"
+  default     = true
+}
+
+variable "transform" {
+  description = "Transform configuration block (populated from root config file)"
+  type = object({
+    spark_version = optional(string, "3.3.1")
+    repositories = optional(list(object({
+      url = string,
+      sha = optional(string, "")
+    })), [])
+  })
+  default = {
+    spark_version = "3.3.1"
+    repositories  = []
+  }
+}
+
 variable "data_source_connections" {
+  description = "List of data sources for the transform pipeline"
   type = list(object({
-    name              = string
-    connection_string = string
+    name     = string
+    fqdn     = string
+    database = string
+    username = string
+    password = string
     peering = optional(
       object({
         virtual_network_name = string
@@ -84,4 +105,5 @@ variable "data_source_connections" {
       })
     )
   }))
+  default = []
 }

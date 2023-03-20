@@ -12,17 +12,19 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import unittest
-from pyspark.sql import SparkSession
+variable "flowehr_id" {
+  type = string
+}
 
+variable "location" {
+  type = string
+}
 
-class PySparkTest(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.spark = (
-            SparkSession.builder.master("local[*]").appName("Unit-tests").getOrCreate()
-        )
+variable "tf_in_automation" {
+  type = bool
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.spark.stop()
+  validation {
+    condition     = !var.tf_in_automation
+    error_message = "CI bootstrapping should be ran locally to create credentials & resources for CI. Please run this from a local machine as a user with rights to assign AD roles."
+  }
+}

@@ -11,17 +11,31 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-.PHONY: help
 
-help: ## Show this help
-	@echo
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
-		| awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%s\033[0m|%s\n", $$1, $$2}' \
-        | column -t -s '|'
-	@echo
+output "naming_suffix" {
+  value = module.naming.suffix
+}
 
-build: ## Build the Python wheel(s)
-	python3 -m build
+output "naming_suffix_truncated" {
+  value = module.naming.suffix_truncated
+}
 
-test: ## Run Python unit tests
-	python3 -m unittest
+output "environment" {
+  value = var.environment
+}
+
+output "mgmt_rg" {
+  value = var.tf_in_automation ? "" : module.management[0].rg
+}
+
+output "mgmt_acr" {
+  value = var.tf_in_automation ? "" : module.management[0].acr
+}
+
+output "mgmt_storage" {
+  value = var.tf_in_automation ? "" : module.management[0].storage
+}
+
+output "deployer_ip_address" {
+  value = var.tf_in_automation ? "" : chomp(data.http.local_ip[0].response_body)
+}

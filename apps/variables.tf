@@ -17,7 +17,7 @@ variable "naming_suffix" {
   description = "Suffix used to name resources"
 }
 
-variable "truncated_naming_suffix" {
+variable "naming_suffix_truncated" {
   type        = string
   description = "Truncated (max 20 chars, no hyphens etc.) suffix for e.g storage accounts"
 }
@@ -30,9 +30,11 @@ variable "tags" {
   type = map(any)
 }
 
-variable "local_mode" {
+variable "tf_in_automation" {
   type = bool
 }
+
+
 
 variable "core_rg_name" {
   type = string
@@ -74,6 +76,20 @@ variable "serve_webapps_subnet_id" {
   type = string
 }
 
-variable "github_owner" {
-  type = string
+# -- FROM CONFIGURATION FILES --------
+variable "accesses_real_data" {
+  type = bool
+}
+
+variable "serve" {
+  description = "Serve configuration block (populated from root config file)"
+  type = object({
+    github_owner = string
+    github_token = optional(string)
+  })
+}
+
+variable "apps" {
+  description = "Apps configuration file containing the apps to deploy"
+  type        = map(any) # App config is validated within ./app module
 }

@@ -12,30 +12,14 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-include "root" {
-  path = find_in_parent_folders()
-  expose = true
-}
+locals {
+  # Root config from config.yaml
+  root_config = yamldecode(file("${get_repo_root()}/config.yaml"))
 
-generate "terraform" {
-  path      = "terraform.tf"
-  if_exists = "overwrite_terragrunt"
-  contents  = <<EOF
-terraform {
-  required_version = "${include.root.locals.terraform_version}"
+  # Environment-specific config for current environment with config.{ENVIRONMENT}.yaml format
+  env_config_path = "${get_repo_root()}/config.${get_env("ENVIRONMENT", "local")}.yaml"
+  env_config      = fileexists(local.env_config_path) ? yamldecode(file(local.env_config_path)) : null
 
-  required_providers {
-    ${include.root.locals.required_provider_azuread}
-  }
-}
-EOF
-}
-
-remote_state {
-  backend = "local"
-  config = {}
-  generate = {
-    path      = "backend.tf"
-    if_exists = "overwrite_terragrunt"
-  }
+  # Merged configuration (with environment-specific config values overwriting root values)
+  merged_root_config = merge(local.root_config, local.env_config)
 }

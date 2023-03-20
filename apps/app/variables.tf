@@ -12,10 +12,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-variable "local_mode" {
-  type = bool
-}
-
 variable "app_id" {
   type = string
 
@@ -44,6 +40,14 @@ variable "resource_group_name" {
 
 variable "location" {
   type = string
+}
+
+variable "tf_in_automation" {
+  type = bool
+}
+
+variable "accesses_real_data" {
+  type = bool
 }
 
 variable "webapps_subnet_id" {
@@ -80,14 +84,18 @@ variable "github_owner" {
 
 variable "app_config" {
   type = object({
-    name         = string
-    description  = string
-    owners       = set(string)
-    contributors = set(string)
+    name             = string
+    description      = string
+    add_testing_slot = optional(bool, false)
 
-    managed_repo = object({
-      private               = bool
-      template              = string,
+    managed_repo = optional(object({
+      private      = bool
+      template     = string
+      owners       = set(string)
+      contributors = set(string)
+    }))
+
+    branch = object({
       num_of_approvals      = optional(number, 1),
       dismiss_stale_reviews = optional(bool, false)
     })
